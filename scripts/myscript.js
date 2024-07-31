@@ -26,6 +26,7 @@ for (let i = 0; i < acc.length; i++) {
 
 
 // Fetch Weather
+//require('dotenv').config();
 const apiKey = process.env.WEATHER_API_KEY;
 const apiUrl = 'https://api.openweathermap.org/data/2.5/weather';
 
