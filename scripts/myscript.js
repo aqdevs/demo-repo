@@ -13,7 +13,7 @@ function closeNav() {
 // Click to slide open panel
 let acc = document.getElementsByClassName("accordion");
 for (let i = 0; i < acc.length; i++) {
-  acc[i].onclick = function() {
+  acc[i].addEventListener("click", function() {
     this.classList.toggle("active");
     let panel = this.nextElementSibling;
     if (panel.style.maxHeight) {
@@ -21,7 +21,7 @@ for (let i = 0; i < acc.length; i++) {
     } else {
       panel.style.maxHeight = "500px";
     } 
-  }
+  });
 }
 
 
@@ -40,20 +40,25 @@ searchButton.addEventListener('click', () => {
   const location = locationInput.value;
   if (location) {
     fetchWeather(location);
+  } else {
+    window.alert("Please enter city name!");
   }
 });
 
 function fetchWeather(location) {
-  const url = `${apiUrl}?q=${location}&appid=${apiKey}&units=metric`;
-  fetch(url)
-  .then(response => response.json())
-  .then(data => {
-    locationElement.textContent = data.name;
-    temperatureElement.textContent = `${Math.round(data.main.temp)}°C`;
-    descriptionElement.textContent = data.weather[0].description;
-  })
-  .catch(error => {
-    console.error('Error fetching weather data:', error);
+  $.ajax({
+    url: `${apiUrl}?q=${location}&appid=${apiKey}&units=metric`,
+    type: "GET",
+    dataType: "jsonp",
+    success: function(data) {
+      $("#locationInput").val('');
+      locationElement.textContent = (data.name + ", " + data.sys.country);
+      temperatureElement.textContent = `${Math.round(data.main.temp)}°C`;
+      descriptionElement.textContent = data.weather[0].description;  
+    },
+    error: function() {
+      window.alert("Invalid city name!");
+    }
   });
 }
 
